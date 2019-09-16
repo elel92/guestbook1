@@ -80,28 +80,16 @@ public class GuestbookDao {
 	public void set_delete(int no, String password) {
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 		
 		try {
 			connection = getConnection();
 			
-			String sql = "select password from guestbook where no = ?";
+			String sql = "delete from guestbook where no = ? and password = ?";
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setInt(1, no);
-			rs = pstmt.executeQuery();
-			String d_password = null;
+			pstmt.setString(2, password);
 			
-			if(rs.next()) {
-				d_password = rs.getString(1);
-			}
-			
-			if(d_password.equals(password)) {
-				sql = "delete from guestbook where no = ?";
-				pstmt = connection.prepareStatement(sql);
-				pstmt.setInt(1, no);
-				
-				pstmt.executeUpdate();
-			}
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
